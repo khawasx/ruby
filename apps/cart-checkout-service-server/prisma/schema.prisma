@@ -1,0 +1,34 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model CartItem {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model Customer {
+  carts     Cart[]
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  createdAt  DateTime        @default(now())
+  customer   Customer?       @relation(fields: [customerId], references: [id])
+  customerId String?
+  id         String          @id @default(cuid())
+  status     EnumCartStatus?
+  updatedAt  DateTime        @updatedAt
+}
+
+enum EnumCartStatus {
+  Option1
+}
