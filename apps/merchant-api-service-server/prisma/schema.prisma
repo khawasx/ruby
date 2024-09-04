@@ -1,0 +1,70 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Customer {
+  createdAt               DateTime                 @default(now())
+  id                      String                   @id @default(cuid())
+  productVariantTrackings ProductVariantTracking[]
+  updatedAt               DateTime                 @updatedAt
+}
+
+model Merchant {
+  createdAt               DateTime                 @default(now())
+  id                      String                   @id @default(cuid())
+  merchantIdTrackings     MerchantIdTracking[]
+  productVariantTrackings ProductVariantTracking[]
+  updatedAt               DateTime                 @updatedAt
+}
+
+model ProductVariantTracking {
+  color                         String?
+  createdAt                     DateTime  @default(now())
+  customer                      Customer? @relation(fields: [customerId], references: [id])
+  customerId                    String?
+  customerConversionSuccessRate Float?
+  customerRefusalSuccessRate    Float?
+  grade                         String?
+  id                            String    @id @default(cuid())
+  merchant                      Merchant? @relation(fields: [merchantId], references: [id])
+  merchantId                    String?
+  merchantStarsAtTime           Float?
+  merchantSuccessRate           Float?
+  model                         String?
+  price                         Float?
+  priceAtTime                   Float?
+  product                       String?
+  size                          String?
+  updatedAt                     DateTime  @updatedAt
+}
+
+model MerchantIdTracking {
+  createdAt           DateTime  @default(now())
+  expectedArrivals    Int?
+  id                  String    @id @default(cuid())
+  merchant            Merchant? @relation(fields: [merchantId], references: [id])
+  merchantId          String?
+  noShowPurchases     Int?
+  product             String?
+  refusedPurchases    Int?
+  successfulPurchases Int?
+  totalPurchases      Int?
+  updatedAt           DateTime  @updatedAt
+}
+
+model Payment {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model Postage {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
